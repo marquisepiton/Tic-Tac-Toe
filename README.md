@@ -7,6 +7,7 @@ I recreate the childhood classic game, tic-tac-toe, in JavaScript.
     - Rendering Elements 
     - State Management
     - Creating objects/classes
+    - Model View Controller (MVC) architectural patterns
 
 
 

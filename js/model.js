@@ -13,7 +13,32 @@ class Player {
         this.score = score;
         this.symbol = symbol;
     }
+
+    //Setters: 
+
+    set name(){
+
+    }
+
+    //Getters: 
+    get name() {
+        // Returns the name of the player. 
+        return this.playerName;
+    }
+    get playerScore(){
+        return this.playerName;
+    }
+
+    get symbol(){
+        return this.symbol;
+    }
 }
+
+
+
+
+
+
 /*
 GameBoard: 
     "slots": will keep track of the slots that have been selected. 
@@ -21,6 +46,12 @@ GameBoard:
 */
 class GameBoard {
 
+    constructor(slots,finishGame) {
+        this.slots = slots;
+        this.finishGame = finishGame; 
+    }
+
+    /*
     slots = [
         //  [0]  [1]  [2]
         " ", " ", " ",
@@ -32,4 +63,6 @@ class GameBoard {
         " ", " ", " "
     ];
     finishGame = false;
+
+    */
 }

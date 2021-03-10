@@ -20,7 +20,7 @@ h1{
 }
 button{
     font-size: 100px;
-    margin-top: 29px;
+    margin-top: 20px;
 
     
 }
@@ -29,5 +29,11 @@ button{
    margin-left: 200px;
    margin-bottom: 40px;
    margin-top: 0px;
+    
+}
+#directions{
+
+    margin-top: 10px;
+    margin-bottom: 5px;
     
 }

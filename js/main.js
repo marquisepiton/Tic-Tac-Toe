@@ -1,3 +1,6 @@
+
+
+// Connecting the element from the HTML to JS
 const start = document.getElementById('start');
 const title = document.getElementById('title');
 const directions = document.getElementById('directions');
@@ -5,8 +8,25 @@ const sig = document.getElementById('sig');
 
 
 
+// These variables are to save the player's score;
+// Player 1 saved Score
+let savedScoreForPlayerOne = 0;
+// Player 2 saved Score
+let savedScoreForPlayerTwo = 0;
 
 
+
+//----------------------C-L-A-S-S-:----P-L-A-Y-E-R--------------------------------------------------------------------------------------------------
+/*
+
+For the player class will be use to store the name and the amount of wins the player will have
+I 
+
+
+
+
+
+*/
 
 
 class Player {
@@ -16,9 +36,15 @@ class Player {
         this.symbol = symbol;
     }
 
-     playerName(string){
+    playerName(string) {
+
 
         this.name = string;
+    }
+
+
+    setCurrentScore(theScore){
+        this.score = theScore
     }
 
 }
@@ -50,30 +76,40 @@ class Game {
         let p2 = playerTwoInstruct.innerHTML = instructions[1];
 
 
-
-        // let arrayOfPlayer = [p1,p2];
-
-
-        // for(let i = 0; i <= arrayOfPlayer.length; i++){
-        //     arrayOfPlayer[i];
-
-        // }
+        start.addEventListener('click', () => {
 
 
-        start.addEventListener('click', () =>{
+            /* 
+            Check if the users didn't put nothing in the input box then 
+            the their name in default will be "Player 1"/ "Player 2".
+
+            */
+
+            if (textInputBoxPlayerOne.value === "") {
+                textInputBoxPlayerOne.value = 'Player 1';
+
+            }
+            if (textInputBoxPlayerTwo.value === "") {
+                textInputBoxPlayerTwo.value = 'Player 2';
+            }
+
+            // Setting the player's name. 
 
             this.player1.playerName(textInputBoxPlayerOne.value);
             this.player2.playerName(textInputBoxPlayerTwo.value);
+
+            this.player1.setCurrentScore(savedScoreForPlayerOne);
+            this.pla
+            /*
+            Once the users put their name and the score as been saved,
+            then the board will be generated. 
+            */
             this.generateBoard();
 
-            console.log(this.player1);
-            console.log(this.player2);
+            cl(this.player1);
+            cl(this.player2);
 
-        } );
-
-        
-
-
+        });
     }
 
     // Creates the tiles
@@ -84,21 +120,46 @@ class Game {
         playerOneInput.style.visibility = 'hidden';
         playerTwoInput.style.visibility = 'hidden';
         start.style.visibility = "hidden";
-        title.style.visibility = "hidden"; 
+
         directions.style.visibility = "hidden";
         sig.style.visibility = "hidden";
 
-        let grid = document.createElement('div');
-            grid.setAttribute("class",'grid');
+
+
+        // For the header
+
+        //header.classList.add()
+        title.innerText = "Fight!";
+
+
+        // For the the slots in the game. 
+        const grid = document.createElement('div');
+
+
 
         for (let i = 0; i < 9; i++) {
 
-           
-           grid.appendChild();
+            grid.classList.add("container")
+            grid.innerText = "col"
+
+
+
+
+
+
 
         }
 
-    }
+    } 
+
+
+
+
+    
+}
+// Shortcut to use the terminal 
+function cl(check) {
+    console.log(check);
 }
 
 

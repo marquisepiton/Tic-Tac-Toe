@@ -68,9 +68,16 @@ class Game {
         // New instances: player1 & player2.
         this.player1 = new Player("Player 1", 0, "X");
         this.player2 = new Player("Player 2", 0, "O");
+                        // 9 Slots
+                        // [0],[1],[2]
+        this.arraySlots = [ "", "", "",
+                        // [3],[4],[5]
+                           "", "", "",
+                        // [6],[7],[8]
+                           "", "", ""  ];
+
+        
     }
-
-
     // This function is to set up the properties for the instances for the player class.
 
     init() {
@@ -131,6 +138,7 @@ class Game {
     // This functions will transition into the game. and create the tiles. 
     generateBoard() {
 
+
         /*
         After the user clicks on the start button, a lot of the elements that are on the
         page will disappear. and generate the tic tac toe board. 
@@ -146,32 +154,37 @@ class Game {
         playerTwoInput.style.visibility = 'hidden';
         // The start button
         start.style.visibility = "hidden";
-
-
-
         // The directions to start the game. 
         directions.style.visibility = "hidden";
-
         // My signature
         sig.style.visibility = "hidden";
-
-
-
         // For the header
-
         //header.classList.add()
         title.innerText = "Fight!";
 
 
-        // For the the slots in the game. 
-        const grid = document.createElement('div');
+
+        const app = document.getElementById('tictac');
 
 
+        const container = this.generateHTML('div','container', "", "", app);
 
-        for (let i = 0; i < 9; i++) {
 
-            grid.classList.add("container")
-            grid.innerText = "col"
+        // params 3
+        const row = this.generateHTML('div','row', "", "", container);
+        
+
+    
+
+        for (let index = 0; index < 9; index++) {
+
+            // For the the slots in the game. 
+            // params 5
+            this.generateHTML("button","col-4","",this.checkWinCondition,row);
+
+            //cl(this.generateHTML("div","col-4",index,this.checkWinCondition,row));
+            
+    
 
         }
 
@@ -183,17 +196,39 @@ class Game {
     }
 
     move(){
-        
+
+        playerInGame = [this.player1, this.player2];
+        let turn = 0;
+
+        // turn = Number(!turn);
+
     }
+    //Creates the HTML elements for the slots.
+    // definition params = 5
+    generateHTML(type,classes,text,thisFunction= "",parent= ""){
+        
+        
+        const element = document.createElement(type);
+        
+        element.classList.add(classes);
+        element.innerHTML = text;
+        
 
+        if(thisFunction){
+            element.addEventListener('click', thisFunction);
+        }
 
+        if(parent){
 
-
+            parent.appendChild(element)
+        }
+        return element; 
+    
+    }
 
 }
 //------------------------------C-L-A-S-S-:-A-P-P----------------------------------------------------------------------------------------------------------------
 /*
-
 Class App is my container class. Every time the game is run,
 it creates a new instance of game which then creates a 2 new instances
 of player. 
@@ -210,8 +245,6 @@ class App {
 
     }
 }
-
-
 /*
 WHAT I'M THINKING: 
 ****************************************************PROGRAM**********************************************************************************************************
@@ -260,8 +293,6 @@ function init() {
     console.log(a);
 
 }
-
-
 //-----------------------------------H-E-L-P-E-R------F-U-N-C-T-I-O-N-----------------------------------------------------------------------------------------------
 // Shortcut function to use the terminal (Helper function)
 function cl(check) {
@@ -270,4 +301,8 @@ function cl(check) {
 // Will Refresh the whole page. and put all progress at default.
 function startOver(){
     location.reload();
+} 
+function listner(){
+
 }
+

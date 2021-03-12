@@ -9,11 +9,15 @@
                 - "Title"
                 - "Directions"
                 - "sig" (Signature)
+                - "erase"
+                - "reset"
 */
 const start = document.getElementById('start');
 const title = document.getElementById('title');
 const directions = document.getElementById('directions');
 const sig = document.getElementById('sig');
+const reset = document.getElementById('reset');
+const erase = document.getElementById('erase');
 
 //---------------------G-L-O-B-A-L--V-A-R-A-I-B-L-E-S-------------------------------------------------------------------------------------------------
 
@@ -70,9 +74,11 @@ class Game {
         // New instances: player1 & player2.
         this.player1 = new Player("Player 1", 0, "X");
         this.player2 = new Player("Player 2", 0, "O");
-        this.arraySlots = [ null ,null ,null
-                           ,null, null, null
-                           ,null,null ,null]
+        this.arraySlots = [null, null, null
+            , null, null, null
+            , null, null, null]
+
+        this.app = null;
 
 
 
@@ -82,14 +88,53 @@ class Game {
 
     init() {
 
+        this.app = document.getElementById('ren');
+
+        this.app.innerHTML = "";
+
+
+
+        this.renderUI();
+
+
+        start.addEventListener('click', () => {
+            /*
+            Once the users put their name and the score as been saved,
+            then the board will be generated. 
+            */
+            this.renderUI();
+            this.generateBoard();
+    
+
+
+            // Checking if the output changes the instance player's name. 
+
+            cl(this.player1);
+            cl(this.player2);
+
+
+        });
+
+    }
+
+    // Render UI Board. 
+    renderUI() {
+
+        /* 
+           Check if the users didn't put nothing in the input box then 
+           the their name in default will be "Player 1"/ "Player 2".
+        */
+
+        // this.generateHTML
+
+        // Getting the name for player one
+
         let instructions = ['Player 1 type your name:', 'Player 2 type your name:'];
         let textInputBoxPlayerOne = document.createElement('input');
         textInputBoxPlayerOne.appendChild(document.createElement('button'));
         let textInputBoxPlayerTwo = document.createElement('input');
 
 
-
-        // Getting the name for player one
 
         document.getElementById('playerOneInput').appendChild(textInputBoxPlayerOne);
         let p1 = playerOneInstruct.innerHTML = instructions[0];
@@ -99,44 +144,43 @@ class Game {
         document.getElementById('playerTwoInput').appendChild(textInputBoxPlayerTwo);
         let p2 = playerTwoInstruct.innerHTML = instructions[1];
 
+        cl(textInputBoxPlayerOne.value);
 
-        start.addEventListener('click', () => {
-            /* 
-            Check if the users didn't put nothing in the input box then 
-            the their name in default will be "Player 1"/ "Player 2".
-            */
+        this.player1.playerName(textInputBoxPlayerOne.value);
+        this.player2.playerName(textInputBoxPlayerTwo.value);
 
-            if (textInputBoxPlayerOne.value === "") {
-                textInputBoxPlayerOne.value = 'Player 1';
+        this.player1.setCurrentScore(savedScoreForPlayerOne);
+        this.player2.setCurrentScore(savedScoreForPlayerTwo);
 
-            }
-            if (textInputBoxPlayerTwo.value === "") {
-                textInputBoxPlayerTwo.value = 'Player 2';
-            }
+        
 
-            // Setting the player's name. 
 
-            this.player1.playerName(textInputBoxPlayerOne.value);
-            this.player2.playerName(textInputBoxPlayerTwo.value);
 
-            this.player1.setCurrentScore(savedScoreForPlayerOne);
-            this.player2.setCurrentScore(savedScoreForPlayerTwo);
-            /*
-            Once the users put their name and the score as been saved,
-            then the board will be generated. 
-            */
-            this.generateBoard();
+        if (textInputBoxPlayerOne.value === "") {
+            textInputBoxPlayerOne.value = 'Player 1';
 
-            // Checking if the output changes the instance player's name. 
+        }
+        if (textInputBoxPlayerTwo.value === "") {
+            textInputBoxPlayerTwo.value = 'Player 2';
+        }
 
-            cl(this.player1);
-            cl(this.player2);
+        // Setting the player's name. 
 
-        });
+       
+
+
     }
 
     // This functions will transition into the game. and create the tiles. 
     generateBoard() {
+
+
+        if (this.app !== "") {
+            this.app.innerHTML = "";
+
+        }
+
+
 
         /*
         After the user clicks on the start button, a lot of the elements that are on the
@@ -161,18 +205,22 @@ class Game {
         //header.classList.add()
         title.innerText = "Fight!";
 
+        // Reveals the Start Over button
+        erase.style.visibility = 'visible';
+
+
+        // Reveal the start over button
+
+        reset.style.visibility = 'visible';
 
 
 
+        erase.addEventListener('click', startOver);
+
+        reset.addEventListener('click', this.resetArray);
 
 
-
-
-
-        const app = document.getElementById('ren');
-
-
-        const container = this.generateHTML('div', 'container', "", "", app);
+        const container = this.generateHTML('div', 'container', "", "", this.app);
 
 
         // params 3
@@ -187,7 +235,7 @@ class Game {
             // params 5
             this.generateHTML("button", "col-4", index, this.checkWinCondition.bind(this, index), row, index);
 
-        
+
 
 
             cl(this.arraySlots);
@@ -205,9 +253,9 @@ class Game {
 
         // Win conditions: '012', '345', '678', '036', '147', '258', '048', '246'
 
-        
 
 
+        // Putting the array
 
         let playerInGame = [this.player1.name, this.player2.name];
         let playerInSymbol = [this.player1.symbol, this.player2.symbol];
@@ -215,142 +263,135 @@ class Game {
 
         // Worse part of my code. 
         // Working on better solutions. 
-        if(this.arraySlots[index] !== null){
+        if (this.arraySlots[index] !== null) {
 
             alert("This slot is already taken.")
 
 
-        }else{
+        } else {
 
             this.arraySlots[index] = playerInSymbol[turn];
             document.getElementById(index).innerHTML = playerInSymbol[turn];
             turn = Number(!turn);
-            
+
         }
 
         // Winning Conditions:
 
 
-         if (this.arraySlots[0] && this.arraySlots[1] && this.arraySlots[2] === "X" ) {
+        if (this.arraySlots[0] && this.arraySlots[1] && this.arraySlots[2] === "X") {
 
-            playerOneInstruct.style.visibility= "hidden";
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[0] + " Wins";
 
             // playerScoreArray[turn] += 1;
-
-
             // saveMyScore(playerScoreArray);
 
-        } else if(this.arraySlots[0] && this.arraySlots[1] && this.arraySlots[2] === "O"){
+        } else if (this.arraySlots[0] && this.arraySlots[1] && this.arraySlots[2] === "O") {
 
 
-            playerOneInstruct.style.visibility= "hidden";
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[1] + " Wins";
 
 
-        }else if(this.arraySlots[3] && this.arraySlots[4] && this.arraySlots[5] === "X"){
+        } else if (this.arraySlots[3] && this.arraySlots[4] && this.arraySlots[5] === "X") {
 
-            playerOneInstruct.style.visibility= "hidden";
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[0] + " Wins";
 
 
-        }else if(this.arraySlots[3] && this.arraySlots[4] && this.arraySlots[5] === "O"){
+        } else if (this.arraySlots[3] && this.arraySlots[4] && this.arraySlots[5] === "O") {
 
-            playerOneInstruct.style.visibility= "hidden";
-
-            title.innerText = playerInGame[1] + " Wins";
-
-        } 
-        else if(this.arraySlots[6] && this.arraySlots[7] && this.arraySlots[8] === "X"){
-
-            playerOneInstruct.style.visibility= "hidden";
-
-            title.innerText = playerInGame[0] + " Wins";
-
-        }else if(this.arraySlots[6] && this.arraySlots[7] && this.arraySlots[8] === "O"){
-
-            playerOneInstruct.style.visibility= "hidden";
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[1] + " Wins";
 
-        }else if(this.arraySlots[0] && this.arraySlots[3] && this.arraySlots[6] === "X"){
-            playerOneInstruct.style.visibility= "hidden";
+        }
+        else if (this.arraySlots[6] && this.arraySlots[7] && this.arraySlots[8] === "X") {
+
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[0] + " Wins";
 
-        }else if(this.arraySlots[0] && this.arraySlots[3] && this.arraySlots[6] === "O"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[6] && this.arraySlots[7] && this.arraySlots[8] === "O") {
+
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[1] + " Wins";
 
-        }else if(this.arraySlots[1] && this.arraySlots[4] && this.arraySlots[7] === "X"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[0] && this.arraySlots[3] && this.arraySlots[6] === "X") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[0] + " Wins";
 
-        }else if(this.arraySlots[1] && this.arraySlots[4] && this.arraySlots[7] === "O"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[0] && this.arraySlots[3] && this.arraySlots[6] === "O") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[1] + " Wins";
 
-        } else if(this.arraySlots[2] && this.arraySlots[5] && this.arraySlots[8] === "X"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[1] && this.arraySlots[4] && this.arraySlots[7] === "X") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[0] + " Wins";
 
-        }else if(this.arraySlots[2] && this.arraySlots[5] && this.arraySlots[8] === "O"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[1] && this.arraySlots[4] && this.arraySlots[7] === "O") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[1] + " Wins";
 
-        }else if(this.arraySlots[0] && this.arraySlots[4] && this.arraySlots[8] === "X"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[2] && this.arraySlots[5] && this.arraySlots[8] === "X") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[0] + " Wins";
 
-        }else if(this.arraySlots[0] && this.arraySlots[4] && this.arraySlots[8] === "O"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[2] && this.arraySlots[5] && this.arraySlots[8] === "O") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[1] + " Wins";
-        } 
-        else if(this.arraySlots[2] && this.arraySlots[4] && this.arraySlots[6] === "X"){
-            playerOneInstruct.style.visibility= "hidden";
+
+        } else if (this.arraySlots[0] && this.arraySlots[4] && this.arraySlots[8] === "X") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[0] + " Wins";
 
-        }else if(this.arraySlots[2] && this.arraySlots[4] && this.arraySlots[6] === "O"){
-            playerOneInstruct.style.visibility= "hidden";
+        } else if (this.arraySlots[0] && this.arraySlots[4] && this.arraySlots[8] === "O") {
+            playerOneInstruct.style.visibility = "hidden";
 
             title.innerText = playerInGame[1] + " Wins";
         }
-        
-        
-        
-        else if(!this.arraySlots.includes(null)){
+        else if (this.arraySlots[2] && this.arraySlots[4] && this.arraySlots[6] === "X") {
+            playerOneInstruct.style.visibility = "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+        } else if (this.arraySlots[2] && this.arraySlots[4] && this.arraySlots[6] === "O") {
+            playerOneInstruct.style.visibility = "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+        }
 
 
 
-            playerOneInstruct.style.visibility= "hidden";
+        else if (!this.arraySlots.includes(null)) {
+
+
+
+            playerOneInstruct.style.visibility = "hidden";
 
 
             title.innerText = "It's a tie!";
 
-        }else{
+        } else {
 
 
 
             playerOneInstruct.innerHTML = playerInGame[turn] + "'s turn!";
-            
+
 
         }
-
-
-
-        
-
 
         cl(index);
 
@@ -359,6 +400,20 @@ class Game {
         cl(this.arraySlots);
 
         cl(turn);
+
+    }
+
+
+    resetArray() {
+
+
+        for(let i = 0; i < 9; i++) {
+
+
+            this.arraySlots[i] = null;
+        }
+
+        this.generateBoard.bind(this);
 
     }
 
@@ -379,13 +434,6 @@ class Game {
         element.setAttribute("id", id);
 
 
-    
-
-
-        
-
-
-
 
         if (thisFunction) {
             element.addEventListener('click', thisFunction);
@@ -399,14 +447,17 @@ class Game {
 
     }
 
+    saveMyScore(newScore) {
+
+
+
+    }
+
 }
 
 
-function saveMyScore(newScore){
 
 
-
-}
 
 
 
@@ -422,6 +473,8 @@ class App {
     constructor() {
         this.game = new Game();
     }
+
+
     init() {
         console.log("starting the app");
         this.game.init();
@@ -445,6 +498,7 @@ WHAT I'M THINKING:
             4. The new instance of game will automatically create 2 "Player" instances.
 
                 -- 2 new instance of player
+        
 
                 5. Once the user edits the input box for player 1, 2, and hits start, will start the game.
 
@@ -475,18 +529,14 @@ function init() {
     a.init();
     // Check if the program creates a new instance of App
     console.log(a);
-
 }
 //-----------------------------------H-E-L-P-E-R------F-U-N-C-T-I-O-N-----------------------------------------------------------------------------------------------
-// Shortcut function to use the terminal (Helper function)
+// Shortcut function to use the terminal (Helper function)s
 function cl(check) {
     console.log(check);
 }
 // Will Refresh the whole page. and put all progress at default.
 function startOver() {
     location.reload();
-}
-function listner() {
-
 }
 

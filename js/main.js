@@ -23,6 +23,8 @@ let savedScoreForPlayerOne = 0;
 // Player 2 saved Score
 let savedScoreForPlayerTwo = 0;
 
+let turn = 0;
+
 
 
 //----------------------C-L-A-S-S-:----P-L-A-Y-E-R--------------------------------------------------------------------------------------------------
@@ -68,15 +70,13 @@ class Game {
         // New instances: player1 & player2.
         this.player1 = new Player("Player 1", 0, "X");
         this.player2 = new Player("Player 2", 0, "O");
-                        // 9 Slots
-                        // [0],[1],[2]
-        this.arraySlots = [ "", "", "",
-                        // [3],[4],[5]
-                           "", "", "",
-                        // [6],[7],[8]
-                           "", "", ""  ];
+        this.arraySlots = [ null ,null ,null
+                           ,null, null, null
+                           ,null,null ,null]
 
-        
+
+
+
     }
     // This function is to set up the properties for the instances for the player class.
 
@@ -120,7 +120,7 @@ class Game {
             this.player2.playerName(textInputBoxPlayerTwo.value);
 
             this.player1.setCurrentScore(savedScoreForPlayerOne);
-            this.pla
+            this.player2.setCurrentScore(savedScoreForPlayerTwo);
             /*
             Once the users put their name and the score as been saved,
             then the board will be generated. 
@@ -138,14 +138,13 @@ class Game {
     // This functions will transition into the game. and create the tiles. 
     generateBoard() {
 
-
         /*
         After the user clicks on the start button, a lot of the elements that are on the
         page will disappear. and generate the tic tac toe board. 
         */
 
         // Player one Instructions
-        playerOneInstruct.style.visibility = 'hidden';
+        // playerOneInstruct.style.visibility = 'hidden';
         // Player two Instructions 
         playerTwoInstruct.style.visibility = 'hidden';
         // Player one input box 
@@ -164,69 +163,254 @@ class Game {
 
 
 
-        const app = document.getElementById('tictac');
 
 
-        const container = this.generateHTML('div','container', "", "", app);
+
+
+
+
+        const app = document.getElementById('ren');
+
+
+        const container = this.generateHTML('div', 'container', "", "", app);
 
 
         // params 3
-        const row = this.generateHTML('div','row', "", "", container);
-        
+        const row = this.generateHTML('div', 'row', "", "", container);
 
-    
+
+
 
         for (let index = 0; index < 9; index++) {
 
             // For the the slots in the game. 
             // params 5
-            this.generateHTML("button","col-4","",this.checkWinCondition,row);
+            this.generateHTML("button", "col-4", index, this.checkWinCondition.bind(this, index), row, index);
 
-            //cl(this.generateHTML("div","col-4",index,this.checkWinCondition,row));
-            
-    
+        
+
+
+            cl(this.arraySlots);
 
         }
+
+        playerOneInstruct.innerHTML = this.player1.name + "'s turn!";
+
+
 
     }
 
     // This will check the win condition. 
-    checkWinCondition(){
+    checkWinCondition(index) {
+
+        // Win conditions: '012', '345', '678', '036', '147', '258', '048', '246'
+
+        
+
+
+
+        let playerInGame = [this.player1.name, this.player2.name];
+        let playerInSymbol = [this.player1.symbol, this.player2.symbol];
+        let playerScoreArray = [this.player1.score, this.player2.score];
+
+        // Worse part of my code. 
+        // Working on better solutions. 
+        if(this.arraySlots[index] !== null){
+
+            alert("This slot is already taken.")
+
+
+        }else{
+
+            this.arraySlots[index] = playerInSymbol[turn];
+            document.getElementById(index).innerHTML = playerInSymbol[turn];
+            turn = Number(!turn);
+            
+        }
+
+        // Winning Conditions:
+
+
+         if (this.arraySlots[0] && this.arraySlots[1] && this.arraySlots[2] === "X" ) {
+
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+            // playerScoreArray[turn] += 1;
+
+
+            // saveMyScore(playerScoreArray);
+
+        } else if(this.arraySlots[0] && this.arraySlots[1] && this.arraySlots[2] === "O"){
+
+
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+
+
+        }else if(this.arraySlots[3] && this.arraySlots[4] && this.arraySlots[5] === "X"){
+
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+
+        }else if(this.arraySlots[3] && this.arraySlots[4] && this.arraySlots[5] === "O"){
+
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+
+        } 
+        else if(this.arraySlots[6] && this.arraySlots[7] && this.arraySlots[8] === "X"){
+
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+        }else if(this.arraySlots[6] && this.arraySlots[7] && this.arraySlots[8] === "O"){
+
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+
+        }else if(this.arraySlots[0] && this.arraySlots[3] && this.arraySlots[6] === "X"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+        }else if(this.arraySlots[0] && this.arraySlots[3] && this.arraySlots[6] === "O"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+
+        }else if(this.arraySlots[1] && this.arraySlots[4] && this.arraySlots[7] === "X"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+        }else if(this.arraySlots[1] && this.arraySlots[4] && this.arraySlots[7] === "O"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+
+        } else if(this.arraySlots[2] && this.arraySlots[5] && this.arraySlots[8] === "X"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+        }else if(this.arraySlots[2] && this.arraySlots[5] && this.arraySlots[8] === "O"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+
+        }else if(this.arraySlots[0] && this.arraySlots[4] && this.arraySlots[8] === "X"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+        }else if(this.arraySlots[0] && this.arraySlots[4] && this.arraySlots[8] === "O"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+        } 
+        else if(this.arraySlots[2] && this.arraySlots[4] && this.arraySlots[6] === "X"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[0] + " Wins";
+
+        }else if(this.arraySlots[2] && this.arraySlots[4] && this.arraySlots[6] === "O"){
+            playerOneInstruct.style.visibility= "hidden";
+
+            title.innerText = playerInGame[1] + " Wins";
+        }
+        
+        
+        
+        else if(!this.arraySlots.includes(null)){
+
+
+
+            playerOneInstruct.style.visibility= "hidden";
+
+
+            title.innerText = "It's a tie!";
+
+        }else{
+
+
+
+            playerOneInstruct.innerHTML = playerInGame[turn] + "'s turn!";
+            
+
+        }
+
+
+
+        
+
+
+        cl(index);
+
+
+
+        cl(this.arraySlots);
+
+        cl(turn);
 
     }
 
-    move(){
 
-        playerInGame = [this.player1, this.player2];
-        let turn = 0;
 
-        // turn = Number(!turn);
 
-    }
+
+
     //Creates the HTML elements for the slots.
     // definition params = 5
-    generateHTML(type,classes,text,thisFunction= "",parent= ""){
-        
-        
+    generateHTML(type, classes, text, thisFunction = "", parent = "", id) {
+
+
         const element = document.createElement(type);
-        
+
         element.classList.add(classes);
         element.innerHTML = text;
+        element.setAttribute("id", id);
+
+
+    
+
+
         
 
-        if(thisFunction){
+
+
+
+        if (thisFunction) {
             element.addEventListener('click', thisFunction);
         }
 
-        if(parent){
+        if (parent) {
 
             parent.appendChild(element)
         }
-        return element; 
-    
+        return element;
+
     }
 
 }
+
+
+function saveMyScore(newScore){
+
+
+
+}
+
+
+
+
 //------------------------------C-L-A-S-S-:-A-P-P----------------------------------------------------------------------------------------------------------------
 /*
 Class App is my container class. Every time the game is run,
@@ -299,10 +483,10 @@ function cl(check) {
     console.log(check);
 }
 // Will Refresh the whole page. and put all progress at default.
-function startOver(){
+function startOver() {
     location.reload();
-} 
-function listner(){
+}
+function listner() {
 
 }
 
